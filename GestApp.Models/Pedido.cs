@@ -1,7 +1,7 @@
 using System.Runtime.Intrinsics.X86;
 
 namespace GestApp.Models;
-class Pedido
+public class Pedido
 
 {
    
