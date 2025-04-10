@@ -16,10 +16,14 @@ namespace GestApp.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Producto>> Get()
+        public ActionResult<List<Producto>> Get(
+            [FromQuery] string? nombre,
+            [FromQuery] decimal? precioMin,
+            [FromQuery] decimal? precioMax)
         {
-            var productos = _service.ObtenerTodos();
+            var productos = _service.FiltrarProductos(nombre, precioMin, precioMax);
             return Ok(productos);
         }
+
     }
 }

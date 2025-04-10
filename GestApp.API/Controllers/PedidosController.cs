@@ -31,5 +31,13 @@ namespace GestApp.API.Controllers
             return Ok($"Pedido {pedido.IdPedido} guardado correctamente con fecha {pedido.Fecha}.");
         }
 
+        [HttpGet]
+        public ActionResult<List<Pedido>> Get()
+        {
+            var pedidos = _service.ObtenerTodos();
+            return Ok(pedidos);
+        }
+
+
     }
 }
