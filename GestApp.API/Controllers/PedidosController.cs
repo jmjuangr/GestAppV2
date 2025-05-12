@@ -19,7 +19,7 @@ namespace GestApp.API.Controllers
         [HttpPost]
         public IActionResult CrearPedido([FromBody] PedidoCreateDTO dto)
         {
-         var pedido = new Pedido(dto.IdPedido);
+            var pedido = new Pedido(dto.IdPedido);
 
             foreach (var producto in dto.Productos)
             {

@@ -7,9 +7,9 @@ namespace GestApp.Business.Services
     {
         private readonly ProductoRepository _repo;
 
-        public ProductoService()
+        public ProductoService(ProductoRepository repo)
         {
-            _repo = new ProductoRepository();
+            _repo = repo;
         }
 
         public List<Producto> ObtenerTodos()
@@ -18,32 +18,32 @@ namespace GestApp.Business.Services
         }
 
         public List<Producto> FiltrarProductos(string? nombre, decimal? precioMin, decimal? precioMax)
-{
-    var productos = _repo.LeerProductos();
+        {
+            var productos = _repo.LeerProductos();
 
-    if (!string.IsNullOrEmpty(nombre))
-    {
-        productos = productos
-            .Where(p => p.NombreProducto.ToLower().Contains(nombre.ToLower()))
-            .ToList();
-    }
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                productos = productos
+                    .Where(p => p.NombreProducto.ToLower().Contains(nombre.ToLower()))
+                    .ToList();
+            }
 
-    if (precioMin.HasValue)
-    {
-        productos = productos
-            .Where(p => p.PrecioProducto >= precioMin.Value)
-            .ToList();
-    }
+            if (precioMin.HasValue)
+            {
+                productos = productos
+                    .Where(p => p.PrecioProducto >= precioMin.Value)
+                    .ToList();
+            }
 
-    if (precioMax.HasValue)
-    {
-        productos = productos
-            .Where(p => p.PrecioProducto <= precioMax.Value)
-            .ToList();
-    }
+            if (precioMax.HasValue)
+            {
+                productos = productos
+                    .Where(p => p.PrecioProducto <= precioMax.Value)
+                    .ToList();
+            }
 
-    return productos;
-}
+            return productos;
+        }
 
     }
 }

@@ -4,43 +4,45 @@ namespace GestApp.Models;
 public class Pedido
 
 {
-   
 
-        public int IdPedido { get; private set; } 
-        public DateTime Fecha { get; private set; } 
-        public List<Producto> Productos { get; private set; } 
 
-        
-        public Pedido(int idPedido)
+    public int IdPedido { get; set; }
+    public DateTime Fecha { get; set; }
+    public List<Producto> Productos { get; set; }
+    public bool Confirmado { get; set; }
+
+    public Pedido() { }
+
+    public Pedido(int idPedido)
+    {
+        IdPedido = idPedido;
+        Fecha = DateTime.Now;
+        Productos = new List<Producto>();
+    }
+
+
+    public void AgregarProducto(Producto producto)
+    {
+        Productos.Add(producto);
+    }
+
+    public void MostrarDetalles()
+    {
+        Console.WriteLine($"Pedido N°: {IdPedido}, Fecha: {Fecha}");
+        Console.WriteLine("Productos en el pedido:");
+
+        if (Productos.Count == 0)
         {
-            IdPedido = idPedido;
-            Fecha = DateTime.Now; 
-            Productos = new List<Producto>(); 
+            Console.WriteLine("No hay productos en este pedido.");
         }
-
-
-        public void AgregarProducto(Producto producto)
+        else
         {
-            Productos.Add(producto);
-        }
-
-         public void MostrarDetalles()
-        {
-            Console.WriteLine($"Pedido N°: {IdPedido}, Fecha: {Fecha}");
-            Console.WriteLine("Productos en el pedido:");
-
-            if (Productos.Count == 0)
+            foreach (var producto in Productos)
             {
-                Console.WriteLine("No hay productos en este pedido.");
-            }
-            else
-            {
-                foreach (var producto in Productos)
-                {
-                    producto.MostrarDetalles();
-                }
+                producto.MostrarDetalles();
             }
         }
+    }
 
 
 
@@ -57,8 +59,8 @@ public class Pedido
         Console.WriteLine($"Pedido guardado correctamente en {filePath}.");
     }
 
-    
 
-    }
+
+}
 
 

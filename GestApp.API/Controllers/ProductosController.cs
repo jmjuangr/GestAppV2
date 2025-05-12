@@ -10,10 +10,11 @@ namespace GestApp.API.Controllers
     {
         private readonly ProductoService _service;
 
-        public ProductosController()
+        public ProductosController(ProductoService service)
         {
-            _service = new ProductoService();
+            _service = service;
         }
+
 
         [HttpGet]
         public ActionResult<List<Producto>> Get(
