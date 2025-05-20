@@ -26,5 +26,42 @@ namespace GestApp.API.Controllers
             return Ok(productos);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult ActualizarProducto(int id, [FromBody] ProductoCreateDTO dto)
+        {
+            var actualizado = _service.ActualizarProducto(id, dto);
+            if (!actualizado)
+            {
+                return NotFound($"No se encontró un producto con ID {id}.");
+            }
+
+            return Ok($"Producto con ID {id} actualizado correctamente.");
+        }
+
+
+        [HttpDelete("{id}")]
+        public IActionResult Eliminar(int id)
+        {
+            var eliminado = _service.EliminarProducto(id);
+
+            if (!eliminado)
+            {
+                return NotFound($"No se encontró un producto con ID {id}");
+            }
+
+            return Ok($"Producto con ID {id} eliminado");
+        }
+
+
+        [HttpPost]
+        public IActionResult CrearProducto([FromBody] ProductoCreateDTO dto)
+        {
+            _service.CrearProducto(dto);
+            return Ok("Producto creado correctamente.");
+        }
+
+
+
+
     }
 }

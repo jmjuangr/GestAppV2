@@ -15,7 +15,6 @@ namespace GestApp.API.Controllers
             _service = new PedidoService();
         }
 
-        // POST /api/pedidos
         [HttpPost]
         public IActionResult CrearPedido([FromBody] PedidoCreateDTO dto)
         {
@@ -32,12 +31,13 @@ namespace GestApp.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Pedido>> Get()
+        public ActionResult<List<Pedido>> Get(
+            [FromQuery] DateTime? fechaMin,
+            [FromQuery] DateTime? fechaMax,
+            [FromQuery] bool? confirmado)
         {
-            var pedidos = _service.ObtenerTodos();
+            var pedidos = _service.FiltrarPedidos(fechaMin, fechaMax, confirmado);
             return Ok(pedidos);
         }
-
-
     }
 }
