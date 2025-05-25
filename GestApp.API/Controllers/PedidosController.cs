@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using GestApp.Business.Services;
 using GestApp.Models;
 
@@ -6,24 +7,23 @@ namespace GestApp.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "User,Admin")]
     public class PedidosController : ControllerBase
     {
         private readonly PedidoService _service;
 
-        public PedidosController()
+        public PedidosController(PedidoService service)
         {
-            _service = new PedidoService();
+            _service = service;
         }
 
         [HttpPost]
         public IActionResult CrearPedido([FromBody] PedidoCreateDTO dto)
         {
-            var pedido = new Pedido(dto.IdPedido);
-
-            foreach (var producto in dto.Productos)
+            var pedido = new Pedido(dto.IdPedido)
             {
-                pedido.AgregarProducto(producto);
-            }
+                Productos = dto.Productos
+            };
 
             _service.GuardarPedido(pedido);
 
@@ -34,10 +34,14 @@ namespace GestApp.API.Controllers
         public ActionResult<List<Pedido>> Get(
             [FromQuery] DateTime? fechaMin,
             [FromQuery] DateTime? fechaMax,
-            [FromQuery] bool? confirmado)
+            [FromQuery] bool? confirmado,
+            [FromQuery] string? ordenarPor = "fecha",
+            [FromQuery] bool ascendente = true
+ )
         {
-            var pedidos = _service.FiltrarPedidos(fechaMin, fechaMax, confirmado);
+            var pedidos = _service.FiltrarPedidos(fechaMin, fechaMax, confirmado, ordenarPor, ascendente);
             return Ok(pedidos);
         }
+
     }
 }

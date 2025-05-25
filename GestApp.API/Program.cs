@@ -15,6 +15,11 @@ builder.Services.AddDbContext<GestAppDbContext>(options =>
 // Repositorios y servicios
 builder.Services.AddScoped<ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
+builder.Services.AddScoped<PedidoService>();
+builder.Services.AddScoped<FacturaService>();
+builder.Services.AddScoped<PedidoRepository>();
+builder.Services.AddScoped<FacturaRepository>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

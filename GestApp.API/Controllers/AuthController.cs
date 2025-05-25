@@ -55,5 +55,28 @@ namespace GestApp.API.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UsuarioRegisterDTO dto)
+        {
+            var usuarioExistente = _context.Set<Usuario>()
+                .FirstOrDefault(u => u.Nombre == dto.Nombre);
+
+            if (usuarioExistente != null)
+                return Conflict(new { mensaje = "Ese nombre de usuario ya está en uso." });
+
+            var nuevoUsuario = new Usuario
+            {
+                Nombre = dto.Nombre,
+                Pass = dto.Pass,
+                Rol = dto.Rol
+            };
+
+            _context.Set<Usuario>().Add(nuevoUsuario);
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Usuario registrado correctamente" });
+        }
+
     }
 }

@@ -17,7 +17,7 @@ namespace GestApp.Business.Services
             return _repo.LeerProductos();
         }
 
-        public List<Producto> FiltrarProductos(string? nombre, decimal? precioMin, decimal? precioMax)
+        public List<Producto> FiltrarProductos(string? nombre, decimal? precioMin, decimal? precioMax, string? ordenarPor = "nombre", bool ascendente = true)
         {
             var productos = _repo.LeerProductos();
 
@@ -29,21 +29,25 @@ namespace GestApp.Business.Services
             }
 
             if (precioMin.HasValue)
-            {
-                productos = productos
-                    .Where(p => p.PrecioProducto >= precioMin.Value)
-                    .ToList();
-            }
+                productos = productos.Where(p => p.PrecioProducto >= precioMin.Value).ToList();
 
             if (precioMax.HasValue)
+                productos = productos.Where(p => p.PrecioProducto <= precioMax.Value).ToList();
+
+            productos = ordenarPor?.ToLower() switch
             {
-                productos = productos
-                    .Where(p => p.PrecioProducto <= precioMax.Value)
-                    .ToList();
-            }
+                "precio" => ascendente
+                    ? productos.OrderBy(p => p.PrecioProducto).ToList()
+                    : productos.OrderByDescending(p => p.PrecioProducto).ToList(),
+
+                _ => ascendente
+                    ? productos.OrderBy(p => p.NombreProducto).ToList()
+                    : productos.OrderByDescending(p => p.NombreProducto).ToList()
+            };
 
             return productos;
         }
+
 
         public bool ActualizarProducto(int id, ProductoCreateDTO dto)
         {
