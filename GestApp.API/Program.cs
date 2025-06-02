@@ -66,4 +66,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<GestAppDbContext>();
+    db.Database.Migrate();
+}
+app.Urls.Add("http://+:8870");
+
 app.Run();

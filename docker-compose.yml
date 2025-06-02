@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: gestapp_sql
+    environment:
+      SA_PASSWORD: "123Secreto456_"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "0788:1433"
+    networks:
+      - gestappnet
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: GestApp.API/Dockerfile
+    container_name: gestapp_api
+    ports:
+      - "8870:8870"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - gestappnet
+
+volumes:
+  sql_data:
+
+networks:
+  gestappnet:
