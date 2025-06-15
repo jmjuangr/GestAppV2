@@ -6,26 +6,40 @@ namespace GestApp.Business.Services
     public class FacturaService
     {
         private readonly FacturaRepository _repo;
+        private readonly PedidoRepository _pedidoRepo;
 
-        public FacturaService(FacturaRepository repo)
+        public FacturaService(FacturaRepository repo, PedidoRepository pedidoRepo)
         {
             _repo = repo;
+            _pedidoRepo = pedidoRepo;
         }
 
-        public void GuardarFactura(Factura factura)
+        public Factura GenerarFacturaDesdePedido(int idPedido)
         {
-            if (factura.Productos == null || factura.Productos.Count == 0)
-                throw new ArgumentException("La factura no puede estar vacía.");
+            var pedido = _pedidoRepo.ObtenerPorId(idPedido);
+            if (pedido == null)
+                throw new ArgumentException("El pedido no existe.");
 
-            if (factura.Productos.Any(p => p.PrecioProducto <= 0))
-                throw new ArgumentException("Todos los productos deben tener un precio mayor que 0.");
+            if (pedido.Productos == null || !pedido.Productos.Any())
+                throw new ArgumentException("El pedido no tiene productos.");
+
+            var factura = new Factura(0, idPedido, pedido.Productos)
+            {
+                EstaPagada = false
+            };
 
             _repo.GuardarFactura(factura);
+            return factura;
         }
 
         public List<Factura> ObtenerTodas()
         {
             return _repo.LeerFacturas();
+        }
+
+        public Factura? ObtenerPorId(int id)
+        {
+            return _repo.ObtenerPorId(id);
         }
 
         public List<Factura> FiltrarFacturas(int? idPedido, decimal? importeMin, decimal? importeMax, bool? estaPagada, string? ordenarPor = "importe", bool ascendente = true)
@@ -60,5 +74,20 @@ namespace GestApp.Business.Services
             return facturas;
         }
 
+        public bool MarcarComoPagada(int idFactura)
+        {
+            var factura = _repo.ObtenerPorId(idFactura);
+            if (factura == null)
+                return false;
+
+            factura.EstaPagada = true;
+            _repo.GuardarFactura(factura);
+            return true;
+        }
+
+        public bool EliminarFactura(int id)
+        {
+            return _repo.EliminarFactura(id);
+        }
     }
 }

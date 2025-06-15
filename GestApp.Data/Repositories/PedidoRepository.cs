@@ -32,5 +32,21 @@ namespace GestApp.Data.Repositories
                 .Include(p => p.Productos)
                 .FirstOrDefault(p => p.IdPedido == id);
         }
+
+        public bool EliminarPedido(int id)
+        {
+            var pedido = _context.Pedidos
+                .Include(p => p.Productos)
+                .FirstOrDefault(p => p.IdPedido == id);
+
+            if (pedido == null)
+                return false;
+
+            _context.Productos.RemoveRange(pedido.Productos); // Borra primero los productos
+            _context.Pedidos.Remove(pedido);
+            _context.SaveChanges();
+
+            return true;
+        }
     }
 }

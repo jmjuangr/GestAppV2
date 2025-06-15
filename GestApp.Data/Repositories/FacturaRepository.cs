@@ -15,7 +15,7 @@ namespace GestApp.Data.Repositories
 
         public void GuardarFactura(Factura factura)
         {
-            _context.Facturas.Add(factura);
+            _context.Facturas.Update(factura);
             _context.SaveChanges();
         }
 
@@ -31,6 +31,17 @@ namespace GestApp.Data.Repositories
             return _context.Facturas
                 .Include(f => f.Productos)
                 .FirstOrDefault(f => f.IdFactura == id);
+        }
+
+        public bool EliminarFactura(int id)
+        {
+            var factura = _context.Facturas.Find(id);
+            if (factura == null)
+                return false;
+
+            _context.Facturas.Remove(factura);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

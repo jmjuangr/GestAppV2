@@ -15,6 +15,8 @@ namespace GestApp.Data
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Factura> Facturas { get; set; }
 
+        public DbSet<Usuario> Usuarios { get; set; }
+
         //reconocer las claves primarias
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +24,7 @@ namespace GestApp.Data
             modelBuilder.Entity<Factura>().HasKey(f => f.IdFactura);
             modelBuilder.Entity<Pedido>().HasKey(p => p.IdPedido);
             modelBuilder.Entity<Producto>().HasKey(p => p.IdProducto);
+            modelBuilder.Entity<Usuario>().HasKey(u => u.Id);
         }
     }
 }

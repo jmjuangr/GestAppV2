@@ -17,7 +17,6 @@ services:
   api:
     build:
       context: .
-      dockerfile: GestApp.API/Dockerfile
     container_name: gestapp_api
     ports:
       - "8870:8870"

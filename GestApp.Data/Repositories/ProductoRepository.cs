@@ -50,6 +50,12 @@ namespace GestApp.Data.Repositories
             return true;
         }
 
+        public List<Producto> ObtenerPorIds(List<int> ids)
+        {
+            return _context.Productos.Where(p => ids.Contains(p.IdProducto)).ToList();
+        }
+
+
         public void GuardarProducto(Producto producto)
         {
             _context.Productos.Add(producto);

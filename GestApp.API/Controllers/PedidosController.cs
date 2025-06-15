@@ -20,14 +20,18 @@ namespace GestApp.API.Controllers
         [HttpPost]
         public IActionResult CrearPedido([FromBody] PedidoCreateDTO dto)
         {
-            var pedido = new Pedido(dto.IdPedido)
+            var productos = _service.ObtenerProductosPorIds(dto.ProductosIds);
+
+            var pedido = new Pedido
             {
-                Productos = dto.Productos
+                Fecha = DateTime.Now,
+                Confirmado = false,
+                Productos = productos
             };
 
             _service.GuardarPedido(pedido);
 
-            return Ok($"Pedido {pedido.IdPedido} guardado correctamente con fecha {pedido.Fecha}.");
+            return Ok(pedido);
         }
 
         [HttpGet]
@@ -36,12 +40,45 @@ namespace GestApp.API.Controllers
             [FromQuery] DateTime? fechaMax,
             [FromQuery] bool? confirmado,
             [FromQuery] string? ordenarPor = "fecha",
-            [FromQuery] bool ascendente = true
- )
+            [FromQuery] bool ascendente = true)
         {
             var pedidos = _service.FiltrarPedidos(fechaMin, fechaMax, confirmado, ordenarPor, ascendente);
             return Ok(pedidos);
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Pedido> GetById(int id)
+        {
+            var pedido = _service.ObtenerPorId(id);
+            if (pedido == null) return NotFound();
+            return Ok(pedido);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult ActualizarPedido(int id, [FromBody] PedidoCreateDTO dto)
+        {
+            var pedidoExistente = _service.ObtenerPorId(id);
+            if (pedidoExistente == null) return NotFound();
+
+            if (dto.ProductosIds?.Any() == true)
+                pedidoExistente.Productos = _service.ObtenerProductosPorIds(dto.ProductosIds);
+
+            pedidoExistente.Confirmado = true;
+
+            _service.GuardarPedido(pedidoExistente);
+
+            return Ok($"Pedido {id} actualizado y confirmado.");
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult EliminarPedido(int id)
+        {
+            var eliminado = _service.EliminarPedido(id);
+            if (!eliminado)
+                return NotFound($"Pedido con ID {id} no encontrado.");
+
+            return Ok($"Pedido {id} eliminado.");
+        }
     }
 }

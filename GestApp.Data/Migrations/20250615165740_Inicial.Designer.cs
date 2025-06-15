@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestApp.Data.Migrations
 {
     [DbContext(typeof(GestAppDbContext))]
-    [Migration("20250512185448_Inicial")]
+    [Migration("20250615165740_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -98,6 +98,34 @@ namespace GestApp.Data.Migrations
                     b.HasIndex("PedidoIdPedido");
 
                     b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("GestApp.Models.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("FechaAlta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pass")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Rol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("GestApp.Models.Producto", b =>

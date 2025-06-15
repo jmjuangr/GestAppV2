@@ -27,6 +27,9 @@ builder.Services.AddScoped<PedidoRepository>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<FacturaRepository>();
 builder.Services.AddScoped<FacturaService>();
+builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -98,13 +101,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// HTTPS redirection si no estás en Docker puedes dejarlo
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Aplicar migraciones automáticamente
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<GestAppDbContext>();
