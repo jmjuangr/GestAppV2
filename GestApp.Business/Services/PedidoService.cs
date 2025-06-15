@@ -16,42 +16,53 @@ namespace GestApp.Business.Services
 
         public void GuardarPedido(Pedido pedido)
         {
+            // Comprueba que que pedido tenga 1 producto al menos
             if (pedido.Productos == null || pedido.Productos.Count == 0)
                 throw new ArgumentException("El pedido no puede estar vacío");
 
+            // Que los productos tengan un precio mayort que 0
             if (pedido.Productos.Any(p => p.PrecioProducto <= 0))
                 throw new ArgumentException("Todos los productos deben tener un precio mayor que 0");
+
 
             _repo.GuardarPedido(pedido);
         }
 
         public List<Producto> ObtenerProductosPorIds(List<int> ids)
         {
+
             return _productoRepo.ObtenerPorIds(ids);
         }
 
         public List<Pedido> ObtenerTodos()
         {
+
             return _repo.LeerPedidos();
         }
 
         public Pedido? ObtenerPorId(int id)
         {
+
             return _repo.ObtenerPorId(id);
         }
 
         public List<Pedido> FiltrarPedidos(DateTime? fechaMin, DateTime? fechaMax, bool? confirmado, string? ordenarPor = "fecha", bool ascendente = true)
         {
+
             var pedidos = _repo.LeerPedidos();
+
 
             if (fechaMin.HasValue)
                 pedidos = pedidos.Where(p => p.Fecha >= fechaMin.Value).ToList();
 
+
             if (fechaMax.HasValue)
                 pedidos = pedidos.Where(p => p.Fecha <= fechaMax.Value).ToList();
 
+
             if (confirmado.HasValue)
                 pedidos = pedidos.Where(p => p.Confirmado == confirmado.Value).ToList();
+
 
             pedidos = ordenarPor?.ToLower() switch
             {
@@ -66,11 +77,13 @@ namespace GestApp.Business.Services
                 _ => pedidos
             };
 
+
             return pedidos;
         }
 
         public bool EliminarPedido(int id)
         {
+
             return _repo.EliminarPedido(id);
         }
     }

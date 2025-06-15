@@ -15,7 +15,10 @@ namespace GestApp.Business.Services
 
         public async Task<IEnumerable<UsuarioDTO>> GetAllAsync()
         {
+
             var usuarios = await _repository.GetAllAsync();
+
+
             return usuarios.Select(u => new UsuarioDTO
             {
                 Id = u.Id,
@@ -26,8 +29,12 @@ namespace GestApp.Business.Services
 
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
         {
+            //byuscar usuario por id
             var u = await _repository.GetByIdAsync(id);
+
+
             if (u == null) return null;
+
 
             return new UsuarioDTO
             {
@@ -39,6 +46,7 @@ namespace GestApp.Business.Services
 
         public async Task<UsuarioDTO> AddAsync(UsuarioCreateDTO dto)
         {
+
             var nuevo = new Usuario
             {
                 Nombre = dto.Nombre,
@@ -46,7 +54,9 @@ namespace GestApp.Business.Services
                 Rol = dto.Rol
             };
 
+
             var creado = await _repository.AddAsync(nuevo);
+
 
             return new UsuarioDTO
             {
@@ -58,19 +68,24 @@ namespace GestApp.Business.Services
 
         public async Task<bool> UpdateAsync(int id, UsuarioCreateDTO dto)
         {
+
             var usuario = await _repository.GetByIdAsync(id);
+
+
             if (usuario == null) return false;
+
 
             usuario.Nombre = dto.Nombre;
             usuario.Pass = dto.Password;
             usuario.Rol = dto.Rol;
 
+
             return await _repository.UpdateAsync(usuario);
         }
 
-
         public async Task<bool> DeleteAsync(int id)
         {
+
             return await _repository.DeleteAsync(id);
         }
     }

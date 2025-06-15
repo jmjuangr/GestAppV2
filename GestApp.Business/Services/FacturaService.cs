@@ -16,47 +16,63 @@ namespace GestApp.Business.Services
 
         public Factura GenerarFacturaDesdePedido(int idPedido)
         {
+            // Busca el pedido por id
             var pedido = _pedidoRepo.ObtenerPorId(idPedido);
+
+
             if (pedido == null)
                 throw new ArgumentException("El pedido no existe.");
+
 
             if (pedido.Productos == null || !pedido.Productos.Any())
                 throw new ArgumentException("El pedido no tiene productos.");
 
+            // Crea nueva factura a partir del pedido y marca como no pagada
             var factura = new Factura(0, idPedido, pedido.Productos)
             {
                 EstaPagada = false
             };
 
+            // Guarda la factura 
             _repo.GuardarFactura(factura);
+
+            // Devuelve la factura
             return factura;
         }
 
         public List<Factura> ObtenerTodas()
         {
+
             return _repo.LeerFacturas();
         }
 
         public Factura? ObtenerPorId(int id)
         {
+
             return _repo.ObtenerPorId(id);
         }
 
         public List<Factura> FiltrarFacturas(int? idPedido, decimal? importeMin, decimal? importeMax, bool? estaPagada, string? ordenarPor = "importe", bool ascendente = true)
         {
+
             var facturas = _repo.LeerFacturas();
+
 
             if (idPedido.HasValue)
                 facturas = facturas.Where(f => f.IdPedido == idPedido.Value).ToList();
 
+
             if (importeMin.HasValue)
                 facturas = facturas.Where(f => f.ImporteTotal >= importeMin.Value).ToList();
+
 
             if (importeMax.HasValue)
                 facturas = facturas.Where(f => f.ImporteTotal <= importeMax.Value).ToList();
 
+
             if (estaPagada.HasValue)
                 facturas = facturas.Where(f => f.EstaPagada == estaPagada.Value).ToList();
+
 
             facturas = ordenarPor?.ToLower() switch
             {
@@ -71,22 +87,32 @@ namespace GestApp.Business.Services
                 _ => facturas
             };
 
+
             return facturas;
         }
 
         public bool MarcarComoPagada(int idFactura)
         {
+
             var factura = _repo.ObtenerPorId(idFactura);
+
+
             if (factura == null)
                 return false;
 
+
             factura.EstaPagada = true;
+
+
             _repo.GuardarFactura(factura);
+
+
             return true;
         }
 
         public bool EliminarFactura(int id)
         {
+
             return _repo.EliminarFactura(id);
         }
     }

@@ -20,7 +20,10 @@ namespace GestApp.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetAll()
         {
+            // Recuper usuarios 
             var usuarios = await _service.GetAllAsync();
+
+
             return Ok(usuarios);
         }
 
@@ -28,8 +31,13 @@ namespace GestApp.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UsuarioDTO>> GetById(int id)
         {
+            // Busca usuareio por id
             var usuario = await _service.GetByIdAsync(id);
+
+
             if (usuario == null) return NotFound();
+
+
             return Ok(usuario);
         }
 
@@ -37,7 +45,10 @@ namespace GestApp.API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<UsuarioDTO>> Create(UsuarioCreateDTO dto)
         {
+            // un nuevo usuario con datos del DTO
             var creado = await _service.AddAsync(dto);
+
+
             return CreatedAtAction(nameof(GetById), new { id = creado.Id }, creado);
         }
 
@@ -45,8 +56,13 @@ namespace GestApp.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UsuarioCreateDTO dto)
         {
+
             var actualizado = await _service.UpdateAsync(id, dto);
+
+
             if (!actualizado) return NotFound();
+
+
             return NoContent();
         }
 
@@ -54,8 +70,12 @@ namespace GestApp.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
+
             var ok = await _service.DeleteAsync(id);
+
+
             if (!ok) return NotFound();
+
             return NoContent();
         }
     }

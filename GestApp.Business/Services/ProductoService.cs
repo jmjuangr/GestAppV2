@@ -14,13 +14,16 @@ namespace GestApp.Business.Services
 
         public List<Producto> ObtenerTodos()
         {
+
             return _repo.LeerProductos();
         }
 
         public List<Producto> FiltrarProductos(string? nombre, decimal? precioMin, decimal? precioMax, string? ordenarPor = "nombre", bool ascendente = true)
         {
+            // Cargalos productos 
             var productos = _repo.LeerProductos();
 
+            //filtros
             if (!string.IsNullOrEmpty(nombre))
             {
                 productos = productos
@@ -28,11 +31,13 @@ namespace GestApp.Business.Services
                     .ToList();
             }
 
+
             if (precioMin.HasValue)
                 productos = productos.Where(p => p.PrecioProducto >= precioMin.Value).ToList();
 
             if (precioMax.HasValue)
                 productos = productos.Where(p => p.PrecioProducto <= precioMax.Value).ToList();
+
 
             productos = ordenarPor?.ToLower() switch
             {
@@ -45,12 +50,13 @@ namespace GestApp.Business.Services
                     : productos.OrderByDescending(p => p.NombreProducto).ToList()
             };
 
+
             return productos;
         }
 
-
         public bool ActualizarProducto(int id, ProductoCreateDTO dto)
         {
+            // Crea producto con los nuevos datos del DTO
             var producto = new Producto
             {
                 NombreProducto = dto.NombreProducto,
@@ -58,17 +64,19 @@ namespace GestApp.Business.Services
                 Categoria = dto.Categoria
             };
 
+
             return _repo.ActualizarProducto(id, producto);
         }
 
-
         public bool EliminarProducto(int id)
         {
+
             return _repo.EliminarProducto(id);
         }
 
         public void CrearProducto(ProductoCreateDTO dto)
         {
+            //crear producto
             var nuevoProducto = new Producto
             {
                 NombreProducto = dto.NombreProducto,
@@ -76,11 +84,8 @@ namespace GestApp.Business.Services
                 Categoria = dto.Categoria
             };
 
+
             _repo.GuardarProducto(nuevoProducto);
         }
-
-
-
-
     }
 }

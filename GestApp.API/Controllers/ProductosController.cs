@@ -3,7 +3,6 @@ using GestApp.Business.Services;
 using GestApp.Models;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace GestApp.API.Controllers
 {
     [ApiController]
@@ -17,7 +16,6 @@ namespace GestApp.API.Controllers
             _service = service;
         }
 
-
         [HttpGet]
         [AllowAnonymous]
         public ActionResult<List<Producto>> Get(
@@ -27,7 +25,10 @@ namespace GestApp.API.Controllers
             [FromQuery] string? ordenarPor = "nombre",
             [FromQuery] bool ascendente = true)
         {
+            // Filtros
             var productos = _service.FiltrarProductos(nombre, precioMin, precioMax, ordenarPor, ascendente);
+
+
             return Ok(productos);
         }
 
@@ -35,7 +36,10 @@ namespace GestApp.API.Controllers
         [HttpPut("{id}")]
         public IActionResult ActualizarProducto(int id, [FromBody] ProductoCreateDTO dto)
         {
+
             var actualizado = _service.ActualizarProducto(id, dto);
+
+
             if (!actualizado)
             {
                 return NotFound($"No se encontró un producto con ID {id}.");
@@ -48,6 +52,7 @@ namespace GestApp.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Eliminar(int id)
         {
+
             var eliminado = _service.EliminarProducto(id);
 
             if (!eliminado)
@@ -62,12 +67,11 @@ namespace GestApp.API.Controllers
         [HttpPost]
         public IActionResult CrearProducto([FromBody] ProductoCreateDTO dto)
         {
+
             _service.CrearProducto(dto);
+
+
             return Ok("Producto creado correctamente.");
         }
-
-
-
-
     }
 }
