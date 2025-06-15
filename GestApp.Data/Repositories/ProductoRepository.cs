@@ -16,43 +16,43 @@ namespace GestApp.Data.Repositories
 
         public List<Producto> LeerProductos()
         {
-            // Devuelve todos los productos guardados en la base de datos
+
             return _context.Productos.ToList();
         }
 
         public bool ActualizarProducto(int id, Producto productoActualizado)
         {
-            // Busca el producto existente por su ID
+            // Busca el producto 
             var productoExistente = _context.Productos.Find(id);
 
-            // Si no existe, devuelve false
+
             if (productoExistente == null)
             {
                 return false;
             }
 
-            // Actualiza los campos del producto con los datos nuevos
+            // Actualiz con los datos nuevos
             productoExistente.NombreProducto = productoActualizado.NombreProducto;
             productoExistente.PrecioProducto = productoActualizado.PrecioProducto;
             productoExistente.Categoria = productoActualizado.Categoria;
 
-            // Guarda los cambios en la base de datos
+
             _context.SaveChanges();
             return true;
         }
 
         public bool EliminarProducto(int id)
         {
-            // Busca el producto por su ID
+
             var producto = _context.Productos.Find(id);
 
-            // Si no existe, devuelve false
+
             if (producto == null)
             {
                 return false;
             }
 
-            // Elimina el producto de la base de datos
+            // Elimina el producto
             _context.Productos.Remove(producto);
             _context.SaveChanges();
             return true;
@@ -60,13 +60,13 @@ namespace GestApp.Data.Repositories
 
         public List<Producto> ObtenerPorIds(List<int> ids)
         {
-            // Devuelve todos los productos cuyo ID esté dentro de la lista de IDs recibida
+            // Devuelve todos los productos de los ids dados
             return _context.Productos.Where(p => ids.Contains(p.IdProducto)).ToList();
         }
 
         public void GuardarProducto(Producto producto)
         {
-            // Añade el producto a la base de datos y guarda los cambios
+
             _context.Productos.Add(producto);
             _context.SaveChanges();
         }
